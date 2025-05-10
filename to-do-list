@@ -1,0 +1,96 @@
+# Simple To-Do List Application
+
+def display_menu():
+    """Displays the main menu to the user."""
+    print("\nTo-Do List Menu:")
+    print("1. Add Task")
+    print("2. View Tasks")
+    print("3. Mark Task as Completed")
+    print("4. Remove Task")
+    print("5. Exit")
+
+def add_task(todo_list, task_name):
+    """Adds a new task to the to-do list."""
+    if task_name:
+        todo_list.append({"task": task_name, "completed": False})
+        print(f"Task '{task_name}' added.")
+    else:
+        print("Task name cannot be empty.")
+
+def view_tasks(todo_list):
+    """Displays all tasks in the to-do list."""
+    if not todo_list:
+        print("Your to-do list is empty!")
+        return
+    print("\nYour Tasks:")
+    for index, item in enumerate(todo_list):
+        status = "Done" if item["completed"] else "Not Done"
+        print(f"{index + 1}. {item['task']} [{status}]")
+
+def mark_task_completed(todo_list, task_index):
+    """Marks a specified task as completed."""
+    try:
+        task_index = int(task_index) - 1 # Adjust for 0-based indexing
+        if 0 <= task_index < len(todo_list):
+            if not todo_list[task_index]["completed"]:
+                todo_list[task_index]["completed"] = True
+                print(f"Task '{todo_list[task_index]['task']}' marked as completed.")
+            else:
+                print(f"Task '{todo_list[task_index]['task']}' was already marked as completed.")
+        else:
+            print("Invalid task number.")
+    except ValueError:
+        print("Invalid input. Please enter a number for the task.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+def remove_task(todo_list, task_index):
+    """Removes a specified task from the to-do list."""
+    try:
+        task_index = int(task_index) - 1 # Adjust for 0-based indexing
+        if 0 <= task_index < len(todo_list):
+            removed_task = todo_list.pop(task_index)
+            print(f"Task '{removed_task['task']}' removed.")
+        else:
+            print("Invalid task number.")
+    except ValueError:
+        print("Invalid input. Please enter a number for the task.")
+    except IndexError: # Should be caught by the 'if' condition, but good for robustness
+        print("Error: Task number out of range.")
+
+
+def main():
+    """Main function to run the To-Do List application."""
+    my_tasks = []
+
+    while True:
+        display_menu()
+        choice = input("Enter your choice (1-5): ")
+
+        if choice == '1':
+            task = input("Enter the task name: ")
+            add_task(my_tasks, task)
+        elif choice == '2':
+            view_tasks(my_tasks)
+        elif choice == '3':
+            if not my_tasks:
+                print("No tasks to mark. Add some tasks first!")
+                continue
+            view_tasks(my_tasks)
+            task_num_to_mark = input("Enter the task number to mark as completed: ")
+            mark_task_completed(my_tasks, task_num_to_mark)
+        elif choice == '4':
+            if not my_tasks:
+                print("No tasks to remove. Add some tasks first!")
+                continue
+            view_tasks(my_tasks)
+            task_num_to_remove = input("Enter the task number to remove: ")
+            remove_task(my_tasks, task_num_to_remove)
+        elif choice == '5':
+            print("Exiting To-Do List application. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please enter a number between 1 and 5.")
+
+if __name__ == "__main__":
+    main()
