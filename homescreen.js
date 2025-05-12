@@ -17,7 +17,7 @@ export default function HomeScreen({ navigation }) {
     };
 
     const unsubscribe = navigation.addListener('focus', fetchSnakes);
-    return () => unsubscribe(); // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, [navigation]);
 
   return (
@@ -28,8 +28,6 @@ export default function HomeScreen({ navigation }) {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <SnakeCard snake={item} />}
         ListEmptyComponent={<Text style={styles.emptyMessage}>No snakes yet. Visit the Breeding Lab!</Text>}
-        windowSize={5}
-        initialNumToRender={3}
       />
       <Button title="Go to Breeding Lab" onPress={() => navigation.navigate('BreedingLab')} />
     </View>
@@ -37,20 +35,7 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#eef',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  emptyMessage: {
-    textAlign: 'center',
-    fontSize: 16,
-    color: '#555',
-    marginTop: 20,
-  },
+  container: { flex: 1, padding: 20, backgroundColor: '#eef' },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+  emptyMessage: { textAlign: 'center', fontSize: 16, color: '#555', marginTop: 20 },
 });
