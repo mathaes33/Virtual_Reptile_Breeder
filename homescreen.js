@@ -8,11 +8,16 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     const fetchSnakes = async () => {
-      const saved = await loadSnakes();
-      setSnakes(saved);
+      try {
+        const savedSnakes = await loadSnakes();
+        setSnakes(savedSnakes || []);
+      } catch (error) {
+        console.error('Failed to load snakes:', error);
+      }
     };
+
     const unsubscribe = navigation.addListener('focus', fetchSnakes);
-    return unsubscribe;
+    return () => unsubscribe(); // Cleanup subscription on unmount
   }, [navigation]);
 
   return (
@@ -22,7 +27,9 @@ export default function HomeScreen({ navigation }) {
         data={snakes}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <SnakeCard snake={item} />}
-        ListEmptyComponent={<Text>No snakes yet. Visit the Breeding Lab!</Text>}
+        ListEmptyComponent={<Text style={styles.emptyMessage}>No snakes yet. Visit the Breeding Lab!</Text>}
+        windowSize={5}
+        initialNumToRender={3}
       />
       <Button title="Go to Breeding Lab" onPress={() => navigation.navigate('BreedingLab')} />
     </View>
@@ -30,6 +37,20 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#eef' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#eef',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  emptyMessage: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#555',
+    marginTop: 20,
+  },
 });
