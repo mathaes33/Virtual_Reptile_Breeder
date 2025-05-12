@@ -1,22 +1,19 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const STORAGE_KEY = 'snake_list';
-
-export const saveSnakes = async (snakes) => {
+export const loadSnakes = async () => {
   try {
-    const jsonValue = JSON.stringify(snakes);
-    await AsyncStorage.setItem(STORAGE_KEY, jsonValue);
-  } catch (e) {
-    console.error('Failed to save snakes:', e);
+    const data = await AsyncStorage.getItem('snakes');
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error('Failed to load snakes:', error);
+    return [];
   }
 };
 
-export const loadSnakes = async () => {
+export const saveSnakes = async (snakes) => {
   try {
-    const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
-    return jsonValue != null ? JSON.parse(jsonValue) : [];
-  } catch (e) {
-    console.error('Failed to load snakes:', e);
-    return [];
+    await AsyncStorage.setItem('snakes', JSON.stringify(snakes));
+  } catch (error) {
+    console.error('Failed to save snakes:', error);
   }
 };
